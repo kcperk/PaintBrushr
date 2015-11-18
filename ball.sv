@@ -15,11 +15,9 @@
 
 module  ball ( input Reset, frame_clk,
 					input [7:0] keycode,
-               output [9:0]  BallX, BallY, BallS,
-					output [7:0] leds);
+               output [9:0]  BallX, BallY, BallS);
     
     logic [9:0] Ball_X_Pos, Ball_X_Motion, Ball_Y_Pos, Ball_Y_Motion, Ball_Size;
-	 logic [7:0] daLEDS;
 	 
     parameter [9:0] Ball_X_Center=320; //320  // Center position on the X axis
     parameter [9:0] Ball_Y_Center=240;  // Center position on the Y axis
@@ -91,7 +89,6 @@ module  ball ( input Reset, frame_clk,
 							begin
 								Ball_Y_Motion <= (~ (Ball_Y_Step) + 1'b1);
 								Ball_X_Motion <= 10'd0;
-								daLEDS <= 8'h01;
 								Ball_Y_Pos <= (Ball_Y_Pos + Ball_Y_Motion);  // Update ball position
 								Ball_X_Pos <= (Ball_X_Pos + Ball_X_Motion);
 							end
@@ -102,7 +99,6 @@ module  ball ( input Reset, frame_clk,
 							begin
 								Ball_X_Motion <= (~ (Ball_X_Step) + 1'b1);
 								Ball_Y_Motion <= 10'd0;
-								daLEDS <= 8'h02;
 								Ball_Y_Pos <= (Ball_Y_Pos + Ball_Y_Motion);  // Update ball position
 								Ball_X_Pos <= (Ball_X_Pos + Ball_X_Motion);
 							end
@@ -113,7 +109,6 @@ module  ball ( input Reset, frame_clk,
 							begin
 								Ball_Y_Motion <= Ball_Y_Step;
 								Ball_X_Motion <= 10'd0;
-								daLEDS <= 8'h04;
 								Ball_Y_Pos <= (Ball_Y_Pos + Ball_Y_Motion);  // Update ball position
 								Ball_X_Pos <= (Ball_X_Pos + Ball_X_Motion);
 							end
@@ -124,14 +119,12 @@ module  ball ( input Reset, frame_clk,
 							begin
 								Ball_X_Motion <= Ball_X_Step;
 								Ball_Y_Motion <= 10'd0;
-								daLEDS <= 8'h08;
 								Ball_Y_Pos <= (Ball_Y_Pos + Ball_Y_Motion);  // Update ball position
 								Ball_X_Pos <= (Ball_X_Pos + Ball_X_Motion);
 							end
 						end
 						default: 
 						begin
-							daLEDS <= 8'hFF;
 							Ball_Y_Pos <= (Ball_Y_Pos + Ball_Y_Motion);  // Update ball position
 							Ball_X_Pos <= (Ball_X_Pos + Ball_X_Motion);
 						end
@@ -157,8 +150,6 @@ module  ball ( input Reset, frame_clk,
     assign BallY = Ball_Y_Pos;
    
     assign BallS = Ball_Size;
-	 
-	 assign leds = daLEDS;
     
 
 endmodule

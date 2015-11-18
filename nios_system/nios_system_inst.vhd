@@ -1,6 +1,7 @@
 	component nios_system is
 		port (
 			clk_clk                : in    std_logic                     := 'X';             -- clk
+			gled_external_export   : out   std_logic_vector(7 downto 0);                     -- export
 			keycode_export         : out   std_logic_vector(15 downto 0);                    -- export
 			otg_hpi_address_export : out   std_logic_vector(1 downto 0);                     -- export
 			otg_hpi_cs_export      : out   std_logic;                                        -- export
@@ -8,7 +9,10 @@
 			otg_hpi_data_out_port  : out   std_logic_vector(15 downto 0);                    -- out_port
 			otg_hpi_r_export       : out   std_logic;                                        -- export
 			otg_hpi_w_export       : out   std_logic;                                        -- export
+			ps2_out_CLK            : inout std_logic                     := 'X';             -- CLK
+			ps2_out_DAT            : inout std_logic                     := 'X';             -- DAT
 			reset_reset_n          : in    std_logic                     := 'X';             -- reset_n
+			rled_external_export   : out   std_logic_vector(17 downto 0);                    -- export
 			sdram_clk_clk          : out   std_logic;                                        -- clk
 			sdram_wire_addr        : out   std_logic_vector(12 downto 0);                    -- addr
 			sdram_wire_ba          : out   std_logic_vector(1 downto 0);                     -- ba
@@ -18,13 +22,16 @@
 			sdram_wire_dq          : inout std_logic_vector(31 downto 0) := (others => 'X'); -- dq
 			sdram_wire_dqm         : out   std_logic_vector(3 downto 0);                     -- dqm
 			sdram_wire_ras_n       : out   std_logic;                                        -- ras_n
-			sdram_wire_we_n        : out   std_logic                                         -- we_n
+			sdram_wire_we_n        : out   std_logic;                                        -- we_n
+			cursor_x_export        : out   std_logic_vector(15 downto 0);                    -- export
+			cursor_y_export        : out   std_logic_vector(15 downto 0)                     -- export
 		);
 	end component nios_system;
 
 	u0 : component nios_system
 		port map (
 			clk_clk                => CONNECTED_TO_clk_clk,                --             clk.clk
+			gled_external_export   => CONNECTED_TO_gled_external_export,   --   gled_external.export
 			keycode_export         => CONNECTED_TO_keycode_export,         --         keycode.export
 			otg_hpi_address_export => CONNECTED_TO_otg_hpi_address_export, -- otg_hpi_address.export
 			otg_hpi_cs_export      => CONNECTED_TO_otg_hpi_cs_export,      --      otg_hpi_cs.export
@@ -32,7 +39,10 @@
 			otg_hpi_data_out_port  => CONNECTED_TO_otg_hpi_data_out_port,  --                .out_port
 			otg_hpi_r_export       => CONNECTED_TO_otg_hpi_r_export,       --       otg_hpi_r.export
 			otg_hpi_w_export       => CONNECTED_TO_otg_hpi_w_export,       --       otg_hpi_w.export
+			ps2_out_CLK            => CONNECTED_TO_ps2_out_CLK,            --         ps2_out.CLK
+			ps2_out_DAT            => CONNECTED_TO_ps2_out_DAT,            --                .DAT
 			reset_reset_n          => CONNECTED_TO_reset_reset_n,          --           reset.reset_n
+			rled_external_export   => CONNECTED_TO_rled_external_export,   --   rled_external.export
 			sdram_clk_clk          => CONNECTED_TO_sdram_clk_clk,          --       sdram_clk.clk
 			sdram_wire_addr        => CONNECTED_TO_sdram_wire_addr,        --      sdram_wire.addr
 			sdram_wire_ba          => CONNECTED_TO_sdram_wire_ba,          --                .ba
@@ -42,6 +52,8 @@
 			sdram_wire_dq          => CONNECTED_TO_sdram_wire_dq,          --                .dq
 			sdram_wire_dqm         => CONNECTED_TO_sdram_wire_dqm,         --                .dqm
 			sdram_wire_ras_n       => CONNECTED_TO_sdram_wire_ras_n,       --                .ras_n
-			sdram_wire_we_n        => CONNECTED_TO_sdram_wire_we_n         --                .we_n
+			sdram_wire_we_n        => CONNECTED_TO_sdram_wire_we_n,        --                .we_n
+			cursor_x_export        => CONNECTED_TO_cursor_x_export,        --        cursor_x.export
+			cursor_y_export        => CONNECTED_TO_cursor_y_export         --        cursor_y.export
 		);
 
