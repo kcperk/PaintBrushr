@@ -1,12 +1,12 @@
-PowerPlay Power Analyzer Status : Successful - Tue Nov 17 21:08:04 2015
+PowerPlay Power Analyzer Status : Successful - Mon Nov 23 18:42:30 2015
 Quartus II 64-Bit Version : 14.1.0 Build 186 12/03/2014 SJ Web Edition
 Revision Name : lab8
 Top-level Entity Name : lab8
 Family : Cyclone IV E
 Device : EP4CE115F29C7
 Power Models : Final
-Total Thermal Power Dissipation : 184.67 mW
-Core Dynamic Thermal Power Dissipation : 1.08 mW
-Core Static Thermal Power Dissipation : 102.05 mW
-I/O Thermal Power Dissipation : 81.54 mW
+Total Thermal Power Dissipation : 190.29 mW
+Core Dynamic Thermal Power Dissipation : 0.91 mW
+Core Static Thermal Power Dissipation : 102.09 mW
+I/O Thermal Power Dissipation : 87.30 mW
 Power Estimation Confidence : Low: user provided insufficient toggle rate data

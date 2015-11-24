@@ -12,7 +12,7 @@
 
 module  lab8 		( input         CLOCK_50,
                        input[3:0]    KEY, //bit 0 is set up as Reset
-							  output [6:0]  HEX0, HEX1,// HEX2, HEX3, HEX4, HEX5, HEX6, HEX7,
+							  output [6:0]  HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, HEX6, HEX7,
 							  output [8:0]  LEDG,
 							  //output [7:0]  LEDR,
 							  output [17:0] LEDR,
@@ -49,14 +49,14 @@ module  lab8 		( input         CLOCK_50,
 							  
 											);
     
-    logic Reset_h, vssig, Clk;
-    logic [9:0] drawxsig, drawysig, ballxsig, ballysig, ballsizesig;
-	 logic [15:0] keycode, cursorX, cursorY;
+    logic Reset_h, vssig, Clk, vgaClock, left_btn, middle_btn, right_btn;
+    logic [9:0] drawxsig, drawysig, ballsizesig, cursorX, cursorY;
+	 logic [15:0] keycode;
+	 logic [7:0] RPrev, GPrev, BPrev, byte1, byte2, byte3;
     
 	 assign Clk = CLOCK_50;
     assign {Reset_h}=~ (KEY[0]);  // The push buttons are active low
-	 assign ballxsig = cursorX[9:0];
-	 assign ballysig = cursorY[9:0];
+	 assign VGA_CLK = vgaClock;
 	
 	 
 	 wire [1:0] hpi_addr;
@@ -101,32 +101,43 @@ module  lab8 		( input         CLOCK_50,
 										 .otg_hpi_cs_export(hpi_cs),
 										 .otg_hpi_r_export(hpi_r),
 										 .otg_hpi_w_export(hpi_w),
-										 .ps2_out_CLK(PS2_CLK),
-										 .ps2_out_DAT(PS2_DAT),
-										 .rled_external_export(LEDR),
-										 .gled_external_export(LEDG),
-										 .cursor_x_export(cursorX),
-										 .cursor_y_export(cursorY)
 										 );
 	
 	//Fill in the connections for the rest of the modules 
     vga_controller vgasync_instance(.Clk(Clk), .Reset(Reset_h),
 												.hs(VGA_HS), .vs(VGA_VS),
-												.pixel_clk(VGA_CLK), .blank(VGA_BLANK_N),
+												.pixel_clk(vgaClock), .blank(VGA_BLANK_N),
 												.sync(VGA_SYNC_N), 
-												.DrawX(drawxsig), .DrawY(drawysig) );
+												.DrawX(drawxsig), .DrawY(drawysig)
+												);
+												
+	PS2_Demo 	ps2 (.CLOCK_50(Clk), .KEY(KEY), .PS2_CLK(PS2_CLK), .PS2_DAT(PS2_DAT), 
+							.HEX0(HEX0), .HEX1(HEX1), .HEX2(HEX2),
+							.HEX3(HEX3), .HEX4(HEX4), .HEX5(HEX5),
+							.byte1(byte1), .byte2(byte2), .byte3(byte3));
    /*
     ball ball_instance(.Reset(Reset_h), .frame_clk(VGA_VS),
 								.keycode(keycode[7:0]),
 								.BallX(ballxsig), .BallY(ballysig), .BallS(ballsizesig)
 								);
    */
-    color_mapper color_instance(.BallX(ballxsig), .BallY(ballysig),
+	
+	 cursor cursor0 (.Clk(Clk), .Reset(Reset_h), 
+						.byte1(byte1), .byte2(byte2), .byte3(byte3),
+						.cursorX(cursorX), .cursorY(cursorY), 
+						.leftButton(left_btn), .middleButton(middle_btn), .rightButton(right_btn));
+	
+	 /*
+	 frameSave	frame_0 (.xPos(drawxsig), .yPos(drawxsig), .Clk(vgaClock),
+								.Ri(VGA_R), .Gi(VGA_G), .Bi(VGA_B), 
+								.Ro(RPrev), .Go(GPrev), .Bo(BPrev));
+	*/
+    color_mapper color_instance(.BallX(cursorX), .BallY(cursorY),
 											.DrawX(drawxsig), .DrawY(drawysig), .Ball_size(10'b0100),
+											.left_btn(left_btn),
+											//.RedPrev(RPrev), .GreenPrev(GPrev), .BluePrev(BPrev),
 											.Red(VGA_R), .Green(VGA_G), .Blue(VGA_B) );
 										  
-	 HexDriver hex_inst_0 (keycode[3:0], HEX0);
-	 HexDriver hex_inst_1 (keycode[7:4], HEX1);
     
 
 	 /**************************************************************************************

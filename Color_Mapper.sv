@@ -14,7 +14,8 @@
 
 
 module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
-								input			[7:0] R, G, B,
+								input				left_btn,
+								input 		[7:0] RedPrev, GreenPrev, BluePrev,
                        output logic [7:0]  Red, Green, Blue );
     
     logic [1:0] canvas;
@@ -39,7 +40,7 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 	  
     always_comb
     begin:Ball_on_proc
-		  if (DrawX < 60 || DrawX > 580 || DrawY < 60 || DrawY > 420 )
+		  if (DrawX < 100 || DrawX > 540 || DrawY < 100 || DrawY > 380 )
 				canvas = 2'b11;
         else if ( ( DistX*DistX + DistY*DistY) <= (Size * Size) ) 
             canvas = 2'b01;
@@ -57,15 +58,27 @@ module  color_mapper ( input        [9:0] BallX, BallY, DrawX, DrawY, Ball_size,
 		  end
         else if ((canvas == 2'b01)) 
         begin 
-            Red = 8'hff;
-            Green = 8'hff;
-            Blue = 8'hff;
+				if (left_btn)
+				begin
+					Red = 8'hff;
+					Green = 8'h00;
+					Blue = 8'hff;
+				end
+				else
+				begin
+					Red = 8'hff;
+					Green = 8'hff;
+					Blue = 8'hff;
+				end
         end       
         else 
         begin 
-            Red = 8'h00; 
-            Green = 8'h00;
-            Blue = 8'h00;
+            //Red = RedPrev; 
+            //Green = GreenPrev;
+            //Blue = BluePrev;
+				Red = 8'h00;
+				Green = 8'h00;
+				Blue = 8'h00;
         end      
     end 
     
