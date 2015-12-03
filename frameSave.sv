@@ -1,5 +1,5 @@
 module frameSave (input [9:0] xPos, yPos,
-						input Clk,
+						input Clk, pixClk,
 						input [7:0] Ri, Gi, Bi,
 						output [7:0] Ro, Go, Bo);
 		
@@ -10,12 +10,18 @@ module frameSave (input [9:0] xPos, yPos,
 		begin
 			if (xPos >= 100 && yPos >= 100 && xPos < 540 && yPos < 380)
 			begin
-				Ro <= r[bX][bY];
-				Go <= g[bX][bY];
-				Bo <= b[bX][bY];
+				if (pixClk)
+				begin
 				r[bX][bY] <= Ri;
 				g[bX][bY] <= Gi;
 				b[bX][bY] <= Bi;
+				end
+				else
+				begin
+				Ro <= r[bX][bY];
+				Go <= g[bX][bY];
+				Bo <= b[bX][bY];
+				end
 			end
 			else
 			begin
