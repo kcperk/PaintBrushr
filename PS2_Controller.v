@@ -3,7 +3,7 @@
  * Module:       Altera_UP_PS2                                               *
  * Description:                                                              *
  *      This module communicates with the PS2 core.                          *
- *                                                                           *
+ *      Modified 12/2/15 by Kevin Perkins and Tarun Rajendran                *
  *****************************************************************************/
 
 module PS2_Controller #(parameter INITIALIZE_MOUSE = 1) (
@@ -25,11 +25,6 @@ module PS2_Controller #(parameter INITIALIZE_MOUSE = 1) (
 	received_data,
 	received_data_en			// If 1 - new data has been received
 );
-
-/*****************************************************************************
- *                           Parameter Declarations                          *
- *****************************************************************************/
-
 
 /*****************************************************************************
  *                             Port Declarations                             *
@@ -57,12 +52,15 @@ wire send_command_w, command_was_sent_w, error_communication_timed_out_w;
 
 generate
 	if(INITIALIZE_MOUSE) begin
+	
+		reg init_done;
+		
 		assign the_command_w = init_done ? the_command : 8'hf4;
 		assign send_command_w = init_done ? send_command : (!command_was_sent_w && !error_communication_timed_out_w);
 		assign command_was_sent = init_done ? command_was_sent_w : 0;
 		assign error_communication_timed_out = init_done ? error_communication_timed_out_w : 1;
 		
-		reg init_done;
+		
 		
 		always @(posedge CLOCK_50)
 			if(reset) init_done <= 0;

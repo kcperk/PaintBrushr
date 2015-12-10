@@ -25,13 +25,16 @@ begin
 		byte1 <= 8'h00;
 		counter <= 2'b00;
 	end
+	// new packet available to read
 	else if (ps2_data_available == 1'b1)
 	begin
+		// Byte 3 for X Movement
 		if (counter == 0)
 		begin
 			byte3 <= ps2_data;
 			counter <= 2'b01;
 		end
+		// Byte 2 for Y Movement
 		else if (counter == 1)
 		begin
 			curX <= (sX ? (curX-5>magX ? curX - magX : 5) 
@@ -39,6 +42,7 @@ begin
 			byte2 <= ps2_data;
 			counter <= 2'b10;
 		end
+		// Byte 1 for Button presses and sign bits
 		else
 		begin
 			curY <= (sY ? (curY < 475 - magY ? curY+magY : 475)
